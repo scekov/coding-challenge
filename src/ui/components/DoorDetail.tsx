@@ -1,5 +1,6 @@
 import Typography from '@mui/material/Typography';
 import { Door } from '@/models/Door';
+import { ConnectionStatus } from '@/models/ConnectionStatus';
 import { DetailPageContainer } from '@/ui/layout/DetailPageContainer';
 import { DetailPageItem } from '@/ui/layout/DetailPageItem';
 
@@ -8,6 +9,8 @@ interface DoorDetailProps {
 }
 
 export function DoorDetail({ door }: DoorDetailProps) {
+  const status = door.connectionStatus === ConnectionStatus.Online ? 'success' : 'error';
+
   return (
     <DetailPageContainer>
       <DetailPageItem label="ID">
@@ -23,7 +26,7 @@ export function DoorDetail({ door }: DoorDetailProps) {
         <Typography>{door.connectionType}</Typography>
       </DetailPageItem>
       <DetailPageItem label="Connection status">
-        <Typography color="success.main">online</Typography>
+        <Typography color={`${status}.main`}>{door.connectionStatus}</Typography>
       </DetailPageItem>
     </DetailPageContainer>
   );
