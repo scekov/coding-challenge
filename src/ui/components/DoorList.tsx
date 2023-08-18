@@ -4,6 +4,8 @@ import { Door } from '@/models/Door';
 import { ConnectionStatus } from '@/models/ConnectionStatus';
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
+import { DateTime } from 'luxon';
+import { getLocaleString } from '@/lib/dateTime';
 
 interface DoorListProps {
   doors: Door[];
@@ -38,6 +40,16 @@ const columns: GridColDef<Door>[] = [
       const status = value === ConnectionStatus.Online ? 'success' : 'error';
 
       return <Typography color={`${status}.main`}>{value}</Typography>;
+    },
+  },
+  {
+    field: 'lastConnectionStatusUpdate',
+    headerName: 'Last Connection Status Update',
+    flex: 1,
+    renderCell: ({ value }) => {
+      const formattedDate = getLocaleString(value, DateTime.DATETIME_SHORT_WITH_SECONDS);
+
+      return <Typography>{formattedDate}</Typography>;
     },
   },
 ];
