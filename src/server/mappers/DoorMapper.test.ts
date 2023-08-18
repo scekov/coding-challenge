@@ -1,5 +1,6 @@
 import { BuildingDto } from '@/__mocks__/dtos/BuidlingDto';
 import { DoorDto } from '@/__mocks__/dtos/DoorDto';
+import { ApartmentDto } from '@/__mocks__/dtos/ApartmentDto';
 import { Door } from '@/models/Door';
 import { DoorMapper } from './DoorMapper';
 
@@ -9,6 +10,13 @@ const buildingDto: BuildingDto = {
   street_no: '10A',
   zip: '8000',
   city: 'Zurich',
+};
+
+const apartmentDto: ApartmentDto = {
+  id: '63f4e2825abc011556da74af',
+  name: 'Apartment 1.1',
+  floor: 1,
+  building_id: buildingDto.id,
 };
 
 const doorDto: DoorDto = {
@@ -52,6 +60,33 @@ describe('DoorMapper', () => {
       connectionType: doorDto.connection_type,
       connectionStatus: doorDto.connection_status,
       lastConnectionStatusUpdate: doorDto.last_connection_status_update,
+    });
+  });
+
+  it('should include apartment name if matching apartment is found', () => {
+    const doorDtoWithApartment: DoorDto = {
+      ...doorDto,
+      apartment_id: apartmentDto.id,
+    };
+
+    const door = doorMapper.toDomain(
+      doorDtoWithApartment,
+      {
+        [buildingDto.id]: buildingDto,
+      },
+      {
+        [apartmentDto.id]: apartmentDto,
+      },
+    );
+
+    expect(door).toMatchObject<Door>({
+      id: doorDto.id,
+      name: doorDto.name,
+      buildingName: `${buildingDto.street} ${buildingDto.street_no}`,
+      connectionType: doorDto.connection_type,
+      connectionStatus: doorDto.connection_status,
+      lastConnectionStatusUpdate: doorDto.last_connection_status_update,
+      apartmentName: apartmentDto.name,
     });
   });
 });
