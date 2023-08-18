@@ -10,7 +10,8 @@ interface DoorDetailProps {
 }
 
 export function DoorDetail({ door }: DoorDetailProps) {
-  const status = door.connectionStatus === ConnectionStatus.Online ? 'success' : 'error';
+  const status =
+    door.connectionStatus === ConnectionStatus.Online ? 'success' : 'error';
 
   return (
     <DetailPageContainer>
@@ -20,17 +21,26 @@ export function DoorDetail({ door }: DoorDetailProps) {
       <DetailPageItem label="Building">
         <Typography>{door.buildingName}</Typography>
       </DetailPageItem>
-      <DetailPageItem label="Apartment">
-        <Typography>{door.apartmentName}</Typography>
-      </DetailPageItem>
+      {door.apartmentName && (
+        <DetailPageItem label="Apartment">
+          <Typography>{door.apartmentName}</Typography>
+        </DetailPageItem>
+      )}
       <DetailPageItem label="Connection type">
         <Typography>{door.connectionType}</Typography>
       </DetailPageItem>
       <DetailPageItem label="Connection status">
-        <Typography color={`${status}.main`}>{door.connectionStatus}</Typography>
+        <Typography color={`${status}.main`}>
+          {door.connectionStatus}
+        </Typography>
       </DetailPageItem>
       <DetailPageItem label="Last connection status update">
-        <Typography>{getLocaleString(door.lastConnectionStatusUpdate, DateTime.DATETIME_MED_WITH_SECONDS)}</Typography>
+        <Typography>
+          {getLocaleString(
+            door.lastConnectionStatusUpdate,
+            DateTime.DATETIME_MED_WITH_SECONDS,
+          )}
+        </Typography>
       </DetailPageItem>
     </DetailPageContainer>
   );

@@ -16,20 +16,24 @@ export class DoorMapper implements EntityMapper<Door, DoorDto> {
       doorDto.building_id,
     );
 
-    const apartmentName = (doorDto.apartment_id && apartmentDtosById) ? this.getApartmentName(
-      apartmentDtosById,
-      doorDto.apartment_id,
-    ) : 'n/a';
-
-    return {
+    const door: Door = {
       id: doorDto.id,
       name: doorDto.name,
       buildingName,
       connectionType: doorDto.connection_type,
       connectionStatus: doorDto.connection_status,
       lastConnectionStatusUpdate: doorDto.last_connection_status_update,
-      apartmentName,
     };
+
+    const apartmentName = (doorDto.apartment_id && apartmentDtosById) && this.getApartmentName(
+      apartmentDtosById,
+      doorDto.apartment_id,
+    );
+    if (apartmentName) {
+      door.apartmentName = apartmentName;
+    }
+
+    return door;
   }
 
   private getBuildingName(buildingDtos: BuildingDtosById, id: string) {
@@ -41,6 +45,6 @@ export class DoorMapper implements EntityMapper<Door, DoorDto> {
   private getApartmentName(apartmentDtos: ApartmentDtosById, id: string) {
     const apartment = apartmentDtos[id];
 
-    return apartment ? apartment.name : 'n/a';
+    return apartment && apartment.name;
   }
 }
